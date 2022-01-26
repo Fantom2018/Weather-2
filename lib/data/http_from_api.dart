@@ -21,7 +21,7 @@ class HttpService {
 
     print(response.body);
     final json = jsonDecode(response.body);
-    //return WeatherResponse.fromJson(json);
+    return WeatherResponse.fromJson(json);
   }
 }
 
