@@ -7,8 +7,10 @@ class WeatherRepo {
   final HttpService httpService;
   WeatherRepo ({required this.httpService});
 
+  //String? get city => null;
+ final city = "London";
   Future<List<WeatherModel>> fetchWeather() async{
-    final todosRaw = await httpService.fetchWeather();
+    final todosRaw = await httpService.getWeather(city!);
     return todosRaw.map((e) => WeatherModel.fromJson(e)).toList();
   }
 }

@@ -1,22 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:nweather_easyaproch_var1/screens/search_screen.dart';
+import 'package:nweather_easyaproch_var1/data/http_from_api.dart';
+
+import 'data/model.dart';
+
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _MyAppState();
+}
 
-  // This widget is the root of your application.
+class _MyAppState extends State<MyApp> {
+  final _cityTextController = TextEditingController();
+  final _dataService = HttpService();
+
+  WeatherResponse? _response;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-      ),
-      home: const SearchPage(),
-    );
+        home: Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (_response != null)
+                  Column(
+                    children: [
+                      Image.network(_response!.iconUrl),
+                      Text(
+                        '${_response!.tempInfo!.temperature}°',
+                        style: TextStyle(fontSize: 40),
+                      ),
+                      Text(_response!.weatherInfo!.description)
+                    ],
+                  ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 50),
+                  child: SizedBox(
+                    width: 150,
+                    child: TextField(
+                        controller: _cityTextController,
+                        decoration: InputDecoration(labelText: 'City'),
+                        textAlign: TextAlign.center),
+                  ),
+                ),
+                ElevatedButton(onPressed: _search, child: Text('Search'))
+              ],
+            ),
+          ),
+        ));
+  }
+
+  void _search() async {
+    final response = await _dataService.getWeather(_cityTextController.text);
+    setState(() => _response = response as WeatherResponse);
   }
 }

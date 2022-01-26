@@ -1,24 +1,27 @@
 import 'dart:convert';
-import 'dart:developer';
+
 import 'package:http/http.dart' as http;
-//import 'package:nweather_easyaproch_var1/data/model.dart';
+import 'package:nweather_easyaproch_var1/data/model.dart';
+
 
 class HttpService {
-  Future<List<dynamic>> fetchWeather() async {
-    var city = 'London';
-    var param = { 'q': city};
-    var uri  = Uri.http('api.openweathermap.org/data/2.5/weather?appid=1f5b6a93123833fd32511e7ffbeebf4b', param.toString());
+  Future<WeatherResponse?> getWeather(String city) async {
+    // api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
 
-    try {
-      var response = await http.get(uri);
+    final queryParameters = {
+      'q': city,
+      'appid': '98e8dfcf4ea2319b693eb4c58b2a6018',
+      'units': 'imperial'
+    };
 
-      log('request: ${uri.toString()}');
-      return jsonDecode(response.body) as List;
+    final uri = Uri.https(
+        'api.openweathermap.org', '/data/2.5/weather', queryParameters);
 
+    final response = await http.get(uri);
 
-    } on Exception {
-      rethrow;
-    }
+    print(response.body);
+    final json = jsonDecode(response.body);
+    //return WeatherResponse.fromJson(json);
   }
 }
 
