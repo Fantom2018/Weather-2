@@ -1,14 +1,16 @@
 
 import 'package:nweather_easyaproch_var1/data/model.dart';
-import 'package:nweather_easyaproch_var1/data/model.dart';
-
 import 'http_from_api.dart';
 
+
 class WeatherRepo {
-  HttpService _httpService = HttpService();
+  final HttpService httpService;
+  WeatherRepo ({required this.httpService});
 
-  Future<WeatherModel> fechWeather() => _httpService.getRequest();
-
+  Future<List<WeatherModel>> fetchWeather() async{
+    final todosRaw = await httpService.fetchWeather();
+    return todosRaw.map((e) => WeatherModel.fromJson(e)).toList();
+  }
 }
 
    
